@@ -1,24 +1,24 @@
 class Solution {
-    
     public int numDecodings(String s) {
-        var nums = new HashSet<String>();
-        for(int i=1; i<=26; i++) {
-            nums.add(String.valueOf(i));
-        }
-        return helper(0, s, nums);
-    }
-    int helper(int i, String s, Set<String> nums) {
-        if(i==s.length()) return 1;
+        var dp = new int[s.length()+1];
+        dp[s.length()] = 1;
 
-        if(i>s.length()) return 0;
-        int ways = 0;
-        if(s.charAt(i) != '0') {
-            ways = helper(i+1, s, nums);
+        for(int i=s.length()-1; i >= 0; i--) {
+            if (s.charAt(i) == '0') continue;
+
+            dp[i] = dp[i+1];
+
+            if(i<s.length()-1 && isValid(s, i)) {
+                dp[i] += dp[i+2];
+            }
         }
-        
-        if(i < s.length()-1 && nums.contains(s.substring(i,i+2))) {
-            ways+= helper(i+2,s, nums);
-        }
-        return ways;
+        return dp[0];
+    }
+
+    private boolean isValid(String s, int i) {
+        if (s.charAt(i) - '0' > 2 
+            || (s.charAt(i) - '0' == 2 && s.charAt(i + 1) - '0' > 6))
+            return false;
+        return true;
     }
 }
