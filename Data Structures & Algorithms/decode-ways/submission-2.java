@@ -1,25 +1,29 @@
-// Memoized
 class Solution {
     public int numDecodings(String s) {
-        var nums = new HashSet<String>();
-        var cache = new int[s.length()];
-        Arrays.fill(cache, -1);
-        for(int i=1; i<=26; i++) {
-            nums.add(String.valueOf(i));
+        var next1Digit = 1;
+        var next2Digit = 0;
+        var current = 0;
+
+        for(int i=s.length()-1; i >= 0; i--) {
+            if (s.charAt(i) == '0') {
+                current = 0;
+            } else {
+                current = next1Digit;
+                if(i<s.length()-1 && isValid(s, i)) {
+                    current += next2Digit;
+                }
+            }
+            next2Digit = next1Digit;
+            next1Digit = current; 
+            current = 0;
         }
-        return helper(0, s, nums, cache);
+        return next1Digit;
     }
-    int helper(int i, String s, Set<String> nums, int[] cache) {
-        if(i==s.length()) return 1;
-        if(i>s.length()) return 0;
-        int ways = 0;
-        if(s.charAt(i) != '0') {
-            ways = helper(i+1, s, nums, cache);
-        }
-        if(i < s.length()-1 && nums.contains(s.substring(i,i+2))) {
-            ways+= helper(i+2,s, nums, cache);
-        }
-        cache[i] = ways;
-        return cache[i];
+
+    private boolean isValid(String s, int i) {
+        if (s.charAt(i) - '0' > 2 
+            || (s.charAt(i) - '0' == 2 && s.charAt(i + 1) - '0' > 6))
+            return false;
+        return true;
     }
 }
