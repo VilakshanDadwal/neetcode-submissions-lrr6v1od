@@ -1,11 +1,26 @@
+// Alternate Solution - Interesting to understand this.
 class Solution {
     public int rob(int[] nums) {
-        if(nums.length ==1) return nums[0];
-        if(nums.length ==2) return Math.max(nums[0], nums[1]);
-        nums[1] = Math.max(nums[0], nums[1]);
-        for(int i=2; i<nums.length; i++) {
-            nums[i] = Math.max(nums[i-1], nums[i] + nums[i-2]);
+        int n = nums.length;
+        var dp = new int[n];
+        Arrays.fill(dp, -1);
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans = Math.max(ans, robFrom(i, nums, dp));
         }
-        return nums[nums.length-1];
+        return ans;
+    }
+
+    private int robFrom(int i, int[] nums, int[] dp) {
+        if (dp[i] != -1) return dp[i];
+
+        int best = nums[i];
+
+        for (int j = i + 2; j < nums.length; j++) {
+            best = Math.max(best, nums[i] + robFrom(j, nums, dp));
+        }
+
+        dp[i] = best;
+        return best;
     }
 }
