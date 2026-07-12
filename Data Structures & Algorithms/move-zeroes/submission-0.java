@@ -1,15 +1,13 @@
 class Solution {
     public void moveZeroes(int[] nums) {
         var current =0;
-        for(int num : nums) {
-            if(num!=0) {
-                nums[current] = num;
+        for(int i=0; i<nums.length;i++) {
+            if(nums[i]!=0) {
+                var temp = nums[i];
+                nums[i] = nums[current];
+                nums[current] = temp;
                 current++;
             }
-        }
-        while(current < nums.length) {
-            nums[current] =0;
-            current++;
         }
     }
 }
