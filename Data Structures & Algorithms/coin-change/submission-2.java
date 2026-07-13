@@ -1,27 +1,19 @@
+// Recursive - Trying out all possible coins in first place, then second .. so on approach
+// Alternate approach - passing the invalid value in function
 class Solution {
-    public int coinChange(int[] coins, int amount) {
-        if(amount==0) return 0;
-        var cache = new HashMap<Integer, Integer>();
-        cache.put(0,0);
-        int minCoins = minCoins(coins, amount, cache);
-        return minCoins == Integer.MAX_VALUE ? -1 : minCoins;
-    }
-    int minCoins(int[] coins, int amount, Map<Integer, Integer> cache) {
-        if(amount==0) return 0;
-        if(cache.containsKey(amount)) return cache.get(amount);
 
-        int minCoins = Integer.MAX_VALUE;
-        for(int coin: coins) {
-            if(amount-coin >= 0) {
-                int coinChange = minCoins(coins, amount - coin, cache);
-                if(coinChange == Integer.MAX_VALUE) {
-                    minCoins = Math.min(minCoins, coinChange);
-                } else {
-                    minCoins = Math.min(minCoins, 1 + coinChange);
-                }
+    public int coinChange(int[] coins, int amount) {
+        var result = coinChange(0, coins, amount, amount+1);
+        return result == amount+1 ? -1 : result;
+    }
+    private int coinChange(int idx, int[] coins, int target, int INVALID_VALUE) {
+        if(target == 0) return 0;
+        var minCoins = INVALID_VALUE;
+        for(int i=idx; i<coins.length; i++) {
+            if(coins[i] <= target) {
+                minCoins = Math.min(minCoins, 1 + coinChange(i, coins, target-coins[i], INVALID_VALUE));
             }
         }
-        cache.put(amount, minCoins);
         return minCoins;
     }
 }
