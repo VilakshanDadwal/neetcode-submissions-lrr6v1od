@@ -1,0 +1,18 @@
+// Recursive - Trying out all possible coins in first place, then second .. so on approach
+class Solution {
+
+    public int coinChange(int[] coins, int amount) {
+        var result = coinChange(0, coins, amount);
+        return result == Integer.MAX_VALUE/2 ? -1 : result;
+    }
+    private int coinChange(int idx, int[] coins, int target) {
+        if(target == 0) return 0;
+        var minCoins = Integer.MAX_VALUE/2;
+        for(int i=idx; i<coins.length; i++) {
+            if(coins[i] <= target) {
+                minCoins = Math.min(minCoins, 1 + coinChange(i, coins, target-coins[i]));
+            }
+        }
+        return minCoins;
+    }
+}
